@@ -5,7 +5,7 @@ import { appDescription } from './constants/index'
 
 // 获取 public/posts/notes 目录下的所有文件
 const postsDirectory = path.join(process.cwd(), 'public', 'posts', 'notes')
-const fileNames = fs.readdirSync(postsDirectory)
+let fileNames = fs.readdirSync(postsDirectory)
 
 // 生成对应的路由
 let routes = fileNames.map((fileName) => {
@@ -14,9 +14,17 @@ let routes = fileNames.map((fileName) => {
   return `/posts/notes/${route}`
 })
 
-routes = ['/', 'noteList', 'blogList', ...routes]
+// 获取 public/posts/blogs 目录下的所有文件
+const blogDirectory = path.join(process.cwd(), 'public', 'posts', 'blogs')
+fileNames = fs.readdirSync(blogDirectory)
 
-console.log(routes)
+const blogRoutes = fileNames.map((fileName) => {
+  // 移除文件扩展名
+  const route = fileName.replace(/\.md$/, '')
+  return `/posts/blogs/${route}`
+})
+
+routes = ['/', 'noteList', 'blogList', ...routes, ...blogRoutes]
 
 export default defineNuxtConfig({
   modules: [
@@ -57,7 +65,13 @@ export default defineNuxtConfig({
       },
     },
     prerender: {
-      crawlLinks: false,
+      autoSubfolderIndex: true,
+      concurrency: 1,
+      interval: 0,
+      failOnError: false,
+      crawlLinks: true,
+      retries: 3,
+      retryDelay: 500,
       routes,
       ignore: ['/hi'],
     },
@@ -84,5 +98,4 @@ export default defineNuxtConfig({
   devtools: {
     enabled: true,
   },
-  csr: false,
 })

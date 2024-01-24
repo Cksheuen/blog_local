@@ -6,7 +6,7 @@ import matter from 'gray-matter'
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
 
-  const postsDirectory = path.join(process.cwd(), 'public', 'posts', body.path)
+  const postsDirectory = path.join('public', 'posts', body.path)
 
   const fileNames = fs.readdirSync(postsDirectory)
   const allPostsData = fileNames.map((fileName) => {
