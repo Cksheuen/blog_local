@@ -5,8 +5,6 @@ const id = route.params.id[0]
 
 <template>
   <div>
-    <ClientOnly fallback-tag="span" fallback="Loading comments...">
-      <Artical :id="id" path="blogs" />
-    </ClientOnly>
+    <Artical :id="id" path="blogs" />
   </div>
 </template>

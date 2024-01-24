@@ -1,5 +1,22 @@
+import fs from 'node:fs'
+import path from 'node:path'
 import { pwa } from './config/pwa'
 import { appDescription } from './constants/index'
+
+// 获取 public/posts/notes 目录下的所有文件
+const postsDirectory = path.join(process.cwd(), 'public', 'posts', 'notes')
+const fileNames = fs.readdirSync(postsDirectory)
+
+// 生成对应的路由
+let routes = fileNames.map((fileName) => {
+  // 移除文件扩展名
+  const route = fileName.replace(/\.md$/, '')
+  return `/posts/notes/${route}`
+})
+
+routes = ['/', 'noteList', 'blogList', ...routes]
+
+console.log(routes)
 
 export default defineNuxtConfig({
   modules: [
@@ -41,7 +58,7 @@ export default defineNuxtConfig({
     },
     prerender: {
       crawlLinks: false,
-      routes: ['/'],
+      routes,
       ignore: ['/hi'],
     },
   },
@@ -67,4 +84,5 @@ export default defineNuxtConfig({
   devtools: {
     enabled: true,
   },
+  csr: false,
 })
