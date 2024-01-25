@@ -4,12 +4,6 @@ const HEIGHT = 972
 const el = $ref<HTMLCanvasElement>()
 const ctx = $computed(() => el!.getContext('2d')!)
 
-onMounted(() => {
-  init(0, HEIGHT, -Math.PI / 4)
-  init(WIDTH, 0, Math.PI / 3 * 2)
-  startFrame()
-})
-
 interface Point {
   x: number
   y: number
@@ -129,6 +123,19 @@ function lineTo(startPoint: Point, endPoint: Point) {
   ctx.lineTo(endPoint.x, endPoint.y) // 绘制直线
   ctx.stroke()
 }
+
+onMounted(() => {
+  pendingTasks = JSON.parse(localStorage.getItem('pendingTasks') ? localStorage.getItem('pendingTasks')! : '[]')
+  console.log(pendingTasks)
+
+  init(0, HEIGHT, -Math.PI / 4)
+  init(WIDTH, 0, Math.PI / 3 * 2)
+  startFrame()
+})
+
+onUnmounted(() => [
+  localStorage.setItem('pendingTasks', JSON.stringify(pendingTasks)),
+])
 </script>
 
 <template>
