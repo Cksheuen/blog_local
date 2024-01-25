@@ -2,13 +2,14 @@
 const { path } = defineProps<{ path: string }>()
 
 const icons = ref<boolean[]>([])
+let data, pending, error, refresh
 
-const { data, pending, error, refresh } = await useFetch('/api/posts/postDirs', {
+({ data, pending, error, refresh } = useFetch('/api/posts/postDirs', {
   method: 'POST',
   body: JSON.stringify({
     path,
   }),
-})
+}))
 
 const years = computed<string[]>(() => {
   const years: string[] = []
@@ -18,18 +19,34 @@ const years = computed<string[]>(() => {
       icons.value[index] = true
     else icons.value[index] = false
   })
+  console.log(years)
+
   return years
+})
+
+onMounted(() => {
+  if (process.client) {
+    if (localStorage.getItem('different')) {
+      window.location.reload()
+      localStorage.removeItem('different')
+    }
+  }
 })
 </script>
 
 <template>
   <div relative z-1>
+    <!-- <div absolute opacity-0>
+      {{ years }}
+    </div> -->
     <ul v-if="!pending" class="list">
       <template v-for="(item, index) in data" :key="index">
         <div v-if="icons[index]" relaive pointer-events-none z-5 h-20 flex justify-left c-gray>
           <span
             absolute text-8em font-bold color-transparent text-stroke-2 text-stroke-hex-aaa op10
-          >{{ years[index] }}</span>
+          >
+            {{ years[index] }}
+          </span>
         </div>
         <div mb-5 flex justify-left text-xl opacity-50 transition-duration-100 hover-opacity-100>
           <NuxtLink :to="`/posts/${path}/${item.id.replace(/\.md$/, '')}`">

@@ -3,6 +3,7 @@ import process from 'node:process'
 import fs from 'node:fs'
 import matter from 'gray-matter'
 
+// 输出当前目录路径
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
 

@@ -3,13 +3,15 @@ const { id, path } = defineProps<{ id: string, path: string }>()
 
 const colorMode = useColorMode()
 
-const { data, pending, error, refresh } = await useFetch(`/api/posts/getContent`, {
+let data, pending, error, refresh
+
+({ data, pending, error, refresh } = await useFetch(`/api/posts/getContent`, {
   method: 'POST',
   body: JSON.stringify({
     id,
     path,
   }),
-})
+}))
 
 const theme = computed(() => {
   if (colorMode.preference === 'light')
@@ -18,6 +20,15 @@ const theme = computed(() => {
   else if (colorMode.preference === 'dark')
     return 'markdown-body-dark'
   return 'markdown-body-light'
+})
+
+onMounted(() => {
+  if (process.client) {
+    if (localStorage.getItem('different')) {
+	  window.location.reload()
+	  localStorage.removeItem('different')
+    }
+  }
 })
 </script>
 

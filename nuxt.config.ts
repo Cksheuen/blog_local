@@ -69,7 +69,7 @@ export default defineNuxtConfig({
       concurrency: 1,
       interval: 0,
       failOnError: false,
-      crawlLinks: true,
+      crawlLinks: false,
       retries: 3,
       retryDelay: 500,
       routes,

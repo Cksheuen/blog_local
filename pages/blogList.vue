@@ -1,5 +1,3 @@
 <template>
-  <div>
-    <List path="blogs" />
-  </div>
+  <List path="blogs" />
 </template>
